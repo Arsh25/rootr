@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title> Rootr: Buy your Roots</title>
+	<script type="text/javascript" src={{url_for('static',filename='home.js')}}></script>
+</head>
+<body>
+	<form name="bid_form" action="/add_bid" method="post" onsubmit="check_bid_form()">
+		IZ Number: <input type="number" name="IZ_number" placeholder ="Your IZ number" required> <br>
+		Bid Amount: <input type="number" name="bid" placeholder ="Your bid" required> <br>
+		Select Root: <select name="roots" required>
+			<option selected disabled hidden>Select a Root</option>
+			{% for root in roots %}
+				<option>{{root}}</option>
+			{% endfor %}
+		</select><br>
+		<input type="submit" value="Submit Bid">
+	</form>
+</body>
+</html>
+
+

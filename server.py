@@ -8,27 +8,23 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def home_page():
-	roots={'Potato','Onion','Turnip','Imported Turnip','Imported Garlic' }
+	roots=['Potato','Onion','Turnip','Imported Turnip','Imported Garlic' ]
 	return render_template('home.html',roots=roots)
 
 def get_izhk_balance(IZ_number):
 	try:
-		citizen = mongo.db.citizens.find_one_or_404({'_id':IZ_number})
-		print(citizen)
-		return citizen['izhk']
+		citizen = mongo.db.citizens.find_one_or_404({'IZ':int(IZ_number)})
+		if citizen is not None:
+			return citizen['izhk']
 	except Exception as e:
-		new_citizen = mongo.db.citizens.insert({'_id':IZ_number,'izhk':100})
-		print(new_citizen)
-		mongo.db.bulk_write([new_citizen])
+		new_citizen = mongo.db.citizens.insert({'IZ':int(IZ_number),'izhk':100})
+		print("EXCEPTION:" + str(e))
 		return get_izhk_balance(IZ_number)
+		# citizen = mongo.db.citizens.find_one({"IZ":IZ_number})
+		# return citizen['izhk']
 
 def update_izhk_balance(IZ_number,new_balance):
-	try:
-		updated_citizen = mongo.db.citizens.update_one({'_id':IZ_number},{'$set':{'izhk':new_balance}}) 
-		print(mongo.db)
-		mongo.db.bulk_write([updated_citizen])
-	except Exception as e:
-		print (e)
+	updated_citizen = mongo.db.citizens.find_one_and_update({"IZ":IZ_number},{"$set":{"izhk":new_balance}},upsert=True) 
 
 
 @app.route('/add_bid',methods=['POST'])
@@ -39,6 +35,7 @@ def add_bid():
 	if izhk_balance < int(request.form['bid']):
 		response += "<br>You do not have enough Izhk, You have "+ str(izhk_balance)+ \
 					" but need "+ request.form['bid']
+		new_balance = izhk_balance
 	else:
 		new_balance = izhk_balance - int(request.form['bid'])
 		update_izhk_balance(int(request.form['IZ_number']),new_balance)

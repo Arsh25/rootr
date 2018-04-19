@@ -5,17 +5,36 @@
 	<script type="text/javascript" src={{url_for('static',filename='home.js')}}></script>
 </head>
 <body>
-	<form name="bid_form" action="/add_bid" method="post" onsubmit="check_bid_form()">
-		IZ Number: <input type="number" name="IZ_number" placeholder ="Your IZ number" required> <br>
-		Bid Amount: <input type="number" name="bid" placeholder ="Your bid" required> <br>
-		Select Root: <select name="roots" required>
-			<option selected disabled hidden>Select a Root</option>
-			{% for root in roots %}
-				<option>{{root}}</option>
-			{% endfor %}
-		</select><br>
-		<input type="submit" value="Submit Bid">
-	</form>
+	<div>
+		<div style="display:inline-block;">
+			<form name="bid_form" action="/add_bid" method="post" onsubmit="check_bid_form()">
+					IZ Number: <input type="number" name="IZ_number" placeholder ="Your IZ number" required> <br>
+					Bid Amount: <input type="number" name="bid" placeholder ="Your bid" required> <br>
+					Select Root: <select name="roots" required>
+					<option selected disabled hidden>Select a Root</option>
+						{% for root in roots %}
+							<option>{{root}}</option>
+						{% endfor %}
+					</select><br>
+				<input type="submit" value="Submit Bid">
+			</form>
+		</div>
+		<div style="display:inline-block">
+			<h2> View all bids </h2>
+			<form name="get_all_bids_form" action="/all_bids_for_citizen" method="post">
+				IZ Number: <input type="number" name="IZ_number" placeholder ="Your IZ number" required> <br>
+				<input type="button" value="View all Bids" onclick="add_citizen_IZ()"">
+			</form>
+			<table>
+				<tr>
+					<th>Root</th>
+					<th>Bid</th>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+	
 </body>
 </html>
 
